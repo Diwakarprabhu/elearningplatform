@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Supabase CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+*{
+  box-sizing:border-box;
+  font-family:"Segoe UI",Arial,sans-serif;
+}
+*{
+  box-sizing:border-box;
+  font-family:"Segoe UI", Arial, sans-serif;
+}
+
+body{
+  margin:0;
+  min-height:100vh;
+  padding:40px;
+  background:linear-gradient(135deg,#00c6ff,#0072ff);
+}
+
+/* main box */
+.wrapper{
+  max-width:1000px;
+  margin:auto;
+  background:#fff;
+  padding:30px;
+  border-radius:20px;
+  box-shadow:0 20px 40px rgba(0,0,0,.25);
+}
+
+/* header */
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:30px;
+}
+
+.header h2{
+  margin:0;
+  color:#222;
+}
+
+.logout{
+  padding:10px 18px;
+  border:none;
+  border-radius:10px;
+  background:#ef4444;
+  color:white;
+  cursor:pointer;
+  transition:.3s;
+}
+
+.logout:hover{
+  background:#dc2626;
+  transform:scale(1.05);
+}
+
+/* cards grid */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:20px;
+}
+
+/* pdf card */
+.card{
+  background:#f9fafb;
+  padding:20px;
+  border-radius:16px;
+  box-shadow:0 10px 25px rgba(0,0,0,.15);
+  transition:.35s ease;
+}
+
+.card:hover{
+  transform:translateY(-6px);
+  box-shadow:0 18px 35px rgba(0,0,0,.25);
+}
+
+.card h3{
+  margin:0 0 12px;
+  font-size:18px;
+  color:#111;
+}
+
+.download{
+  display:inline-block;
+  padding:10px 16px;
+  border-radius:10px;
+  text-decoration:none;
+  color:#fff;
+  background:linear-gradient(135deg,#3b82f6,#2563eb);
+  transition:.3s;
+}
+
+.download:hover{
+  background:linear-gradient(135deg,#2563eb,#1d4ed8);
+  transform:scale(1.05);
+}
+
+/* empty message */
+.empty{
+  text-align:center;
+  font-size:16px;
+  color:#555;
+  margin-top:40px;
+}
+
+body{
+  margin:0;
+  min-height:100vh;
+  padding:30px;
+
+  /* 🌈 animated gradient background */
+  background:linear-gradient(-45deg,#4facfe,#00f2fe,#667eea,#764ba2);
+  background-size:400% 400%;
+  animation:gradientMove 10s ease infinite;
+}
+
+@keyframes gradientMove{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+
+/* main container */
+.container{
+  max-width:900px;
+  margin:auto;
+  background:rgba(255,255,255,.95);
+  padding:30px;
+  border-radius:18px;
+  box-shadow:0 25px 50px rgba(0,0,0,.25);
+}
+
+/* header */
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:25px;
+}
+
+.header h2{
+  margin:0;
+  color:#333;
+}
+
+.logout{
+  padding:10px 18px;
+  border:none;
+  border-radius:10px;
+  background:linear-gradient(135deg,#ef4444,#dc2626);
+  color:#fff;
+  cursor:pointer;
+  transition:.3s;
+}
+
+.logout:hover{
+  transform:scale(1.05);
+}
+
+/* pdf grid */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:20px;
+}
+
+/* pdf card */
+.card{
+  background:#fff;
+  padding:20px;
+  border-radius:14px;
+  box-shadow:0 10px 25px rgba(0,0,0,.15);
+  transition:.35s ease;
+}
+
+.card:hover{
+  transform:translateY(-6px);
+  box-shadow:0 18px 35px rgba(0,0,0,.25);
+}
+
+.card h3{
+  margin:0 0 15px;
+  color:#333;
+  font-size:18px;
+}
+
+/* download button */
+.download{
+  display:inline-block;
+  padding:10px 16px;
+  border-radius:10px;
+  text-decoration:none;
+  color:#fff;
+  background:linear-gradient(135deg,#3b82f6,#2563eb);
+  transition:.3s;
+}
+
+.download:hover{
+  transform:scale(1.05);
+  background:linear-gradient(135deg,#2563eb,#1d4ed8);
+}
+
+/* empty message */
+.empty{
+  text-align:center;
+  color:#555;
+  margin-top:40px;
+}
+
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h2>Student Dashboard</h2>
+
+    <table border="1" width="100%" id="pdfTable">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Download</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- PDFs will load here -->
+      </tbody>
+    </table>
+  </div>
+
+
+<script>
+const SUPABASE_URL = "https://tehrflzjvyhlagxbrljc.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRlaHJmbHpqdnlobGFneGJybGpjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg2OTQ2MjQsImV4cCI6MjA4NDI3MDYyNH0.wxBIEKXya0CU_-GA-6dSeWI6wS8HPwx4gmsV976MEIk";
+
+
+const supabaseClient = supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+async function loadPDFs() {
+  const { data, error } = await supabaseClient
+    .from("pdfs")
+    .select("title, file_url");
+
+  if (error) {
+    console.error(error);
+    alert("Error loading PDFs");
+    return;
+  }
+
+  const tbody = document.querySelector("#pdfTable tbody");
+  tbody.innerHTML = "";
+
+  data.forEach(pdf => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${pdf.title}</td>
+      <td>
+        <a href="${pdf.file_url}" target="_blank">
+          Download
+        </a>
+      </td>
+    `;
+    tbody.appendChild(row);
+  });
+}
+
+loadPDFs();
+</script>
+
+</body>
+</html>
